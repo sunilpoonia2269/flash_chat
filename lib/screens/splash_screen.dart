@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'chat_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String id = 'splash_screen';
@@ -14,8 +16,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 4), () {
-      Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+
+    checkAuthentication();
+  }
+
+  checkAuthentication() async {
+    FirebaseAuth.instance.onAuthStateChanged.listen((FirebaseUser user) {
+      Timer(Duration(seconds: 4), () {
+        if (user != null) {
+          Navigator.pushReplacementNamed(context, ChatScreen.id);
+        } else {
+          Navigator.pushReplacementNamed(context, WelcomeScreen.id);
+        }
+      });
     });
   }
 
@@ -98,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         textAlign: TextAlign.center,
                       ),
                       Text(
-                        'SR Software Solution Pvt. Ltd.',
+                        'Ekansh Khandelwal',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15.0,
